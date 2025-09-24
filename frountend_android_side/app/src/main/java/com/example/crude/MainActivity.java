@@ -28,8 +28,6 @@ public class MainActivity extends AppCompatActivity {
 EditText username , email , password;
 Button signup ;
 
-OkHttpClient client = new OkHttpClient();
-public static final MediaType Json = MediaType.get("application/json; charset=utf-8");
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,26 +54,8 @@ public static final MediaType Json = MediaType.get("application/json; charset=ut
             json.put("email",jEmail);
             json.put("password",jPassword);
 
-            RequestBody body = RequestBody.create(json.toString(),Json);
-            Request request = new Request.Builder().
-                    url("http://192.168.152.112:3000/basic_job_demo/signup").
-                    post(body).
-                    build();
-
-            client.newCall(request).enqueue(new Callback() {
-                @Override
-                public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                    runOnUiThread(()->
-                                    Toast.makeText(MainActivity.this,"Failed:"+e.getMessage(),Toast.LENGTH_SHORT).show()
-                            );
-                }
-
-                @Override
-                public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-String res = response.body().string();
-runOnUiThread(()->
-        Toast.makeText(MainActivity.this,"Response:"+res,Toast.LENGTH_SHORT).show());
-                }
+            aipclint.postRequest(this,"signup",json,response -> {
+Toast.makeText(this,"signup res"+response,Toast.LENGTH_SHORT).show();
             });
         }catch (Exception e){
 e.printStackTrace();
